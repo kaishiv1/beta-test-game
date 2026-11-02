@@ -342,6 +342,8 @@ body {
 .dpad-cluster {
     display: flex;
     gap: 15px;
+    margin-bottom: 20px;
+    margin-left: 15px;
 }
 
 /* Tata letak aksi bentuk Diamond (ABXY) */
