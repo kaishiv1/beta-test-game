@@ -317,28 +317,53 @@ body {
     margin-top: 25px;
 }
 
-/* MOBILE CONTROLS */
+/* =========================================================
+   MOBILE CONTROLS (Format Layout Gamepad)
+========================================================= */
 
 #mobile-ui {
     position: fixed;
-    bottom: 16px;
+    bottom: 30px; /* Ditinggikan agar teks label tidak terpotong */
     left: 0;
     width: 100%;
     display: none;
     justify-content: space-between;
-    padding: 0 22px;
+    align-items: flex-end;
+    padding: 0 35px;
     z-index: 40;
     pointer-events: none;
 }
 
 .mobile-group {
-    display: flex;
-    gap: 12px;
     pointer-events: auto;
 }
 
+/* Tata letak tombol gerak (Kiri & Kanan) */
+.dpad-cluster {
+    display: flex;
+    gap: 15px;
+}
+
+/* Tata letak aksi bentuk Diamond (ABXY) */
+.action-cluster {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 2px;
+    align-items: center;
+    justify-items: center;
+}
+
+/* --- KAMU BISA ATUR TOMBOL DI SINI ---
+   Ubah angka 'margin' pada masing-masing ID di bawah ini 
+   jika jarak antar tombol dirasa kurang pas atau mau digeser. */
+#ui-potion { grid-column: 1; grid-row: 2; margin-right: -10px; }
+#ui-lompat { grid-column: 2; grid-row: 1; margin-bottom: -15px; }
+#ui-turun  { grid-column: 2; grid-row: 3; margin-top: -15px; }
+#ui-serang { grid-column: 3; grid-row: 2; margin-left: -10px; }
+
 .touch-btn {
-    width: clamp(66px, 12vw, 96px);
+    width: clamp(58px, 11vw, 84px); /* Sedikit disesuaikan ukurannya agar tidak terlalu besar */
     aspect-ratio: 473 / 493;
     border: 0;
     padding: 0;
@@ -348,12 +373,28 @@ body {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     opacity: .88;
+    position: relative;
 }
 
-.touch-btn:active {
-    filter: brightness(1.45);
-    transform: scale(.94);
+.touch-btn:active, .touch-btn.pressed {
+    filter: brightness(1.45) drop-shadow(0 0 8px rgba(255,210,84,.6));
+    transform: scale(.91);
 }
+
+.touch-btn::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -15px;
+    color: #ffe18a;
+    font: 800 10px/1 Consolas, monospace;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px #000;
+    text-align: center;
+    pointer-events: none;
+}
+
 
 /* GAME HUD */
 
@@ -527,18 +568,22 @@ body.hide-mobile-ui #mobile-ui {
     .menu-buttons { flex-direction: column; }
     .menu-hint { display: none; }
 
-    #mobile-ui { padding: 0 12px; }
+    #mobile-ui { padding: 0 18px; bottom: 26px; }
+    .dpad-cluster { gap: 10px; }
+    .action-cluster { gap: 0px; }
+    .touch-btn { width: clamp(48px, 11vw, 70px); }
+    .touch-btn::after { font-size: 8px; bottom: -13px; }
+
     #hp-widget { width: 210px; top: 6px; left: 6px; }
     #top-game-buttons { top: 6px; gap: 5px; }
     #btn-fullscreen { padding: 7px; font-size: 10px; }
     #minimap-widget { top: 56px; right: 6px; width: 150px; }
 }
 
-/* layar pendek (HP landscape): tombol sentuh dikecilkan agar tidak menutupi karakter */
+/* layar pendek (HP landscape) */
 @media (max-height: 480px) {
-    .touch-btn { width: 54px; opacity: .72; }
-    #mobile-ui { bottom: 6px; }
-    .mobile-group { gap: 8px; }
+    .touch-btn { width: 48px; opacity: .72; }
+    #mobile-ui { bottom: 22px; padding: 0 20px; }
 }
 
 /* =========================================================
@@ -702,7 +747,7 @@ body.hide-mobile-ui #mobile-ui {
 }
 
 /* =========================================================
-   PERBAIKAN UI, PANDUAN KONTROL & FEEDBACK INPUT
+   PERBAIKAN PANDUAN KONTROL & FEEDBACK INPUT
 ========================================================= */
 .controls-guide {
     width: min(760px, 92vw);
@@ -839,21 +884,6 @@ kbd {
     transition: opacity .12s ease, transform .12s ease;
 }
 #control-feedback.show { opacity: 1; transform: translate(-50%, 0); }
-.touch-btn.pressed { filter: brightness(1.6) drop-shadow(0 0 8px rgba(255,210,84,.6)); transform: scale(.91); }
-.touch-btn::after {
-    content: attr(data-label);
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -13px;
-    color: #ffe18a;
-    font: 800 9px/1 Consolas, monospace;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 4px #000;
-    text-align: center;
-    pointer-events: none;
-}
-.touch-btn { position: relative; }
 
 /* Artwork stage-clear / failed memakai ukuran asli PNG 1024 x 572. */
 .art-panel {
@@ -923,24 +953,17 @@ button:active { filter: brightness(1.25); }
     #top-game-buttons { top: 6px; gap: 3px; }
     #pause-button, #btn-fullscreen { width: 42px; }
     #interact-prompt { bottom: 104px; }
-    #mobile-ui { gap: 8px; padding: 0 10px 15px; }
-    .mobile-group { gap: 7px; }
-    .touch-btn { width: clamp(44px, 10vw, 72px); }
-    .touch-btn::after { font-size: 7px; bottom: -10px; }
+    
     .art-panel .end-buttons { left: 12%; right: 12%; gap: 4px; }
     .art-panel .end-buttons button { padding: 7px 8px; }
     .art-panel .end-sub { top: 22%; font-size: 10px; }
 }
 @media (max-height: 480px) {
-    .touch-btn { width: 48px; }
-    #mobile-ui { bottom: 3px; }
     #potion-button { top: 60px; }
 }
 
-
 /* =========================================================
    UI ART-FIRST REVISION
-   Tombol/label yang sudah ada di PNG tidak digambar ulang oleh HTML.
 ========================================================= */
 .end-screen {
     display: none;
