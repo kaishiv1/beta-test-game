@@ -48,12 +48,29 @@ body {
     display: none;
     width: 100%;
     height: 100%;
-    justify-content: center;
-    align-items: center;
+    overflow-y: auto; /* Mengizinkan scroll vertikal */
 }
 
 .screen.active {
     display: flex;
+    flex-direction: column; /* Mengubah arah susunan agar scroll berfungsi rapi */
+    align-items: center; /* Menengahkan posisi secara horizontal */
+}
+
+/* Trik agar menu berada di tengah saat layar besar, tapi bisa discroll tanpa memotong bagian atas saat layar HP sempit */
+.screen.active::before,
+.screen.active::after {
+    content: "";
+    flex: 1 1 auto;
+    min-height: 30px; /* Jarak aman / padding dari ujung atas dan bawah layar */
+}
+
+/* Mencegah panel / gambar mengerut atau tergencet saat di-scroll */
+.main-panel,
+.settings-shell,
+.simple-panel,
+.cs-shell {
+    flex-shrink: 0;
 }
 
 .main-panel {
